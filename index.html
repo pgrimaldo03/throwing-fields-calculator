@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Throwing Fields Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Field Throwing Distance Calculator</h1>
+        <p>Calculate the distances to the arcs for throwing events based on field setup.</p>
+        <p>Point A is the side that we start on and is based on only one tape measure. The second tape measure might have different foul line measurement.</p>
+        <form id="calculator">
+            <label for="distance">Distance from Measuring Tape to Foul Line:</label><br>
+            <input type="number" id="distance" name="distance" required><br>
+
+            <label for="event">Throwing Event:</label><br>
+            <select id="event" name="event">
+                <option value="javelin">Javelin</option>
+                <option value="shotput">Shotput</option>
+                <option value="discus">Discus</option>
+                <option value="hammer">Hammer Throw</option>
+            </select><br><br>
+
+            <button type="button" onclick="calculateArcs()">Calculate</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function calculateArcs() {
+            const distance = parseFloat(document.getElementById('distance').value);
+            const event = document.getElementById('event').value;
+
+            if (isNaN(distance) || distance <= 0) {
+                document.getElementById('result').innerText = "Please enter a valid positive number for the distance.";
+                return;
+            }
+
+            const arcDistancesJavelin = [40, 50, 60, 70]; // Javelin arcs in meters
+            const arcDistancesShotput = [10, 12, 14, 16, 18, 20]; // Shotput arcs in meters
+            const arcDistancesDiscus = [40, 50, 60]; // Discus arcs in meters
+            const arcDistancesHammer = [40, 50, 60, 70]; // Hammer Throw arcs in meters
+
+            let arcDistances;
+            if (event === "javelin") {
+                arcDistances = arcDistancesJavelin;
+            } else if (event === "shotput") {
+                arcDistances = arcDistancesShotput;
+            } else if (event === "discus") {
+                arcDistances = arcDistancesDiscus;
+            } else if (event === "hammer") {
+                arcDistances = arcDistancesHammer;
+            }
+
+            let resultText = `Calculated distances for ${event} in meters:
+`;
+
+            arcDistances.forEach((arc, index) => {
+                const a = arc + distance;
+                const multiplier = event === "javelin" ? 0.5 : 0.6;
+                const b = a * multiplier;
+                const bPlusA = b + a;
+
+                resultText += `Arc ${index + 1}: A = ${a.toFixed(2)} meters, B = ${b.toFixed(2)} meters, B + A = ${bPlusA.toFixed(2)} meters\n`;
+            });
+
+            document.getElementById('result').innerText = resultText;
+        }
+    </script>
+</body>
+</html>
